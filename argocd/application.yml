@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/EnzoCortez/taller-argocd-gitops.git
+    targetRevision: main
+    path: k8s                       # carpeta con deployment.yml, service.yml y hpa.yml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: taller-argocd
+  syncPolicy:
+    automated:                      # Automated Sync
+      prune: true                   # elimina del clúster lo que se borre del repo
+      selfHeal: true                # revierte cambios manuales hechos en el clúster
+    syncOptions:
+      - CreateNamespace=true
+  # El HPA modifica spec.replicas; se ignora para que Argo CD no lo revierta a 2
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: web-app
+      jsonPointers:
+        - /spec/replicas
