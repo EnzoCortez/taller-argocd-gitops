@@ -5,7 +5,7 @@ metadata:
   labels:
     app: web-app
     tier: frontend
-    version: "v2"                 # cambio para probar la sincronización automática
+    version: "v3"                 # cambio para probar la sincronización automática
 spec:
   replicas: 2                     # réplicas iniciales (luego el HPA ajusta entre 2 y 5)
   selector:
